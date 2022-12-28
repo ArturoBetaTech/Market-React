@@ -9,16 +9,47 @@ class App extends Component {
       { name: 'Tomate', price: 1600, img: '/products/tomate.jpg' },
       { name: 'Arbejas', price: 2500, img: '/products/arbejas.jpg' },
       { name: 'lechuga', price: 700, img: '/products/lechuga.jpg' },
-    ]
+    ],
+    car:[],
+    isActive:false
+  }
+  insertShopping =(product) => {
+    const{car}=this.state
+    if(car.find(x => x.name === product.name)){
+      const newCar =car.map(x => x.name === product.name
+        ?({
+          ...x,
+          amount: x.amount +1
+        })
+        : x
+        )
+        return this.setState({car: newCar})
+    }
+    return this.setState({
+      car: this.state.car.concat({
+        ...product,
+        amount:1,
+      })
+    })
+  }
+  viewCar = () =>{
+    if(!this.state.car.length){
+      return
+    }
+    this.setState({isActive: !this.state.isActive})
   }
   render() {
+    const {isActive}= this.state
     return (
       <div>
-        <Navbar/>
+        <Navbar 
+          car={this.state.car}
+          isActive={isActive} 
+          viewCar={this.viewCar}/>
         <Layout>
          <h1 className='title'>Tienda</h1>
           <Products
-            insertShopping={() => console.log("np")}
+            insertShopping={this.insertShopping}
             products={this.state.products}
           />
         </Layout>
